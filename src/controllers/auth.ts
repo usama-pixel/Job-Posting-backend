@@ -1,15 +1,16 @@
 import { NextFunction, Request, Response } from "express";
 import {ResponeData} from '../interface/responseData.js'
-import { createUser } from "../services/authService.js"; 
+import { createUser, loginUser } from "../services/authService.js"; 
 import { APIError } from "../utils/ApiError.js";
 
 export const Signup = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const {username, password} = req.body
-        if(username && password) {
-            const d = await createUser({username: username, password: password})
-            console.log({d});
+        if(!username || !password) {
+            throw new APIError('Username or password is empty', 404, true, '');
         }
+        const d = await createUser({username: username, password: password})
+        // console.log({d});
         const result: ResponeData = {
             msg: "Signed up",
             status: 200
@@ -17,12 +18,20 @@ export const Signup = async (req: Request, res: Response, next: NextFunction) =>
         res.json(result);
     } catch(err) {
         console.log(err);
-        
-        throw new APIError(
-            'Api Error',
-            500,
-            false,
-            'Dont know bro, some error occured'
-        )
+        next(err)
+    }
+}
+
+export const Login = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const {username, password} = req.body
+        if(!username || !password) {
+            throw new APIError('Username or password is empty', 404, true, '');
+        }
+        const d = await loginUser({username, password})
+        const result: ResponeData = {msg: 'Login Successfull', status: 200}
+        res.json(result)
+    } catch(err) {
+        next(err)
     }
 }

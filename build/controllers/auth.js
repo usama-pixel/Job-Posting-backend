@@ -7,15 +7,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { createUser } from "../services/authService.js";
+import { createUser, loginUser } from "../services/authService.js";
 import { APIError } from "../utils/ApiError.js";
 export const Signup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { username, password } = req.body;
-        if (username && password) {
-            const d = yield createUser({ username: username, password: password });
-            console.log({ d });
+        if (!username || !password) {
+            throw new APIError('Username or password is empty', 404, true, '');
         }
+        const d = yield createUser({ username: username, password: password });
+        // console.log({d});
         const result = {
             msg: "Signed up",
             status: 200
@@ -24,7 +25,21 @@ export const Signup = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     }
     catch (err) {
         console.log(err);
-        throw new APIError('Api Error', 500, false, 'Dont know bro, some error occured');
+        next(err);
+    }
+});
+export const Login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { username, password } = req.body;
+        if (!username || !password) {
+            throw new APIError('Username or password is empty', 404, true, '');
+        }
+        const d = yield loginUser({ username, password });
+        const result = { msg: 'Login Successfull', status: 200 };
+        res.json(result);
+    }
+    catch (err) {
+        next(err);
     }
 });
 //# sourceMappingURL=auth.js.map

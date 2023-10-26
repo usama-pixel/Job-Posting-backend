@@ -8,14 +8,38 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { prisma } from "../db/db.js";
-// const
+import HttpStatusCode from "../enums/HttpStatus.js";
+import { APIError } from "../utils/ApiError.js";
+import bcrypt from 'bcrypt';
 export const createUser = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    const isUserExist = yield prisma.user.findFirst({
+        where: {
+            username: data.username
+        }
+    });
+    if (isUserExist) {
+        throw new APIError('Username already exits', HttpStatusCode.CONFLICT, true, `An account with username {${data.username}} already exists`);
+    }
+    const saltRounds = 10;
+    const hasedPassword = yield bcrypt.hash(data.password, saltRounds);
     const res = yield prisma.user.create({
         data: {
             username: data.password,
-            password: data.password
+            password: hasedPassword
         }
     });
     return res;
+});
+export const loginUser = ({ username, password }) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield prisma.user.findFirst({
+        where: {
+            username,
+        }
+    });
+    if (!user) {
+        throw new APIError('Username does not exists', 404, true, '');
+    }
+    const hashedPassword = yield bcrypt.compare(password, user.password);
+    console.log({ hashedPassword });
 });
 //# sourceMappingURL=authService.js.map
