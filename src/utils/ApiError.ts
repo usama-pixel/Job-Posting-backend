@@ -1,6 +1,6 @@
 import HttpStatusCode from "../enums/HttpStatus.js";
 
-class BaseError extends Error {
+export class BaseError extends Error {
     public readonly name: string;
     public readonly httpCode: HttpStatusCode;
     public readonly isOperational: boolean;
@@ -18,7 +18,7 @@ class BaseError extends Error {
 }
 
 export class APIError extends BaseError {
-    constructor(name: string, httpCode = HttpStatusCode.INTERNAL_SERVER_ERROR, isOperational = true, description = 'Internal Server Error') {
+    constructor(public name: string, httpCode = HttpStatusCode.INTERNAL_SERVER_ERROR, public isOperational = true, public description = 'Internal Server Error') {
         super(name, httpCode, description, isOperational);
     }
 }

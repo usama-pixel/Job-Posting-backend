@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "type": "module",
+  "prisma": {
+    "seed": "ts-node --esm prisma/seeds/seed.ts"
+  },
   "scripts": {
     "build": "tsc",
     "start": "node build/index.js",

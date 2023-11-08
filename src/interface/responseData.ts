@@ -1,4 +1,5 @@
-export interface ResponeData {
+export interface ResponseData {
     msg: string,
+    data?: any,
     status: number
 }
