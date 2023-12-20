@@ -2,6 +2,7 @@ import { prisma } from "../db/db.js"
 import HttpStatusCode from "../enums/HttpStatus.js"
 import { APIError } from "../utils/ApiError.js"
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 export const createUser = async(data: {username: string, password: string}) => {
     const isUserExist = await prisma.user.findFirst({
@@ -39,5 +40,21 @@ export const loginUser = async ({username, password}: {username: string, passwor
         throw new APIError('Username does not exists', 404, true, '');
     }
     const hashedPassword = await bcrypt.compare(password, user.password)
-    console.log({hashedPassword});
+    const token = jwt.sign({ id: user.id?.toString(), name: user.username }, 'SECRET_KEY', {
+        expiresIn: '2 days',
+    });
+    return {token, id: user.id, username: user.username}
+    // return {user: {id: user.id, username: user.username}, token }
+    // const token = jwt.sign(
+    //     {
+    //         id: user.id?.toString(),
+    //         name: user.username
+    //     },
+    //     'secret',
+    //     {
+    //         algorithm: '',
+    //         expires
+    //     }
+    // )
+
 }

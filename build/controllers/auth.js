@@ -34,8 +34,12 @@ export const Login = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             console.log('error');
             throw new APIError('Username or password is empty', 404, true, '');
         }
-        const d = yield loginUser({ username, password });
-        const result = { msg: 'Login Successfull', status: 200 };
+        const data = yield loginUser({ username, password });
+        const result = {
+            msg: 'Login Successfull',
+            data: data,
+            status: 200
+        };
         res.json(result);
     }
     catch (err) {

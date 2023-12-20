@@ -9,20 +9,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { prisma } from "../db/db.js";
 import { itemsPerPage } from "../utils/constants.js";
-export const createJobService = ({ position, companyName, tags, hourlyRate, address }) => __awaiter(void 0, void 0, void 0, function* () {
+export const createJobService = ({ position, companyName, tags, hourlyRate, address, empTypeId, scheduleId, countryId, userId, expId }) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield prisma.jobs.create({
         data: {
             position,
             date: new Date(),
             company_name: companyName,
-            tags: ['a', 'b'],
             hourly_rate: +hourlyRate,
-            address
+            experience_levelId: expId,
+            employment_typeId: empTypeId,
+            working_scheduleId: scheduleId,
+            countriesId: countryId,
+            userId: userId
         }
     });
+    console.log({ result });
     return result;
 });
-export const getJobsService = (page, lower = '0', upper = '100', search, location, schedule, empType) => __awaiter(void 0, void 0, void 0, function* () {
+export const getJobsService = (page, lower = '0', upper = '100', search, location, experience, schedule, empType) => __awaiter(void 0, void 0, void 0, function* () {
     // console.log({page, itemsPerPage, lower, upper});
     const where = {};
     if (+lower !== 0 || +upper !== 0) {
@@ -38,9 +42,19 @@ export const getJobsService = (page, lower = '0', upper = '100', search, locatio
         };
     }
     if (location) {
-        where.address = {
-            contains: location,
-            mode: 'insensitive'
+        where.countries = {
+            name: {
+                contains: location,
+                mode: 'insensitive'
+            }
+        };
+    }
+    if (experience && experience.toLowerCase() !== 'entry level') {
+        where.experience_level = {
+            name: {
+                contains: experience,
+                mode: 'insensitive'
+            }
         };
     }
     if (schedule && schedule.length > 0) {
@@ -70,6 +84,26 @@ export const getJobsService = (page, lower = '0', upper = '100', search, locatio
 });
 export const getTotalJobsService = () => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield prisma.jobs.count();
+    return result;
+});
+export const getCountriesService = () => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma.countries.findMany();
+    return result;
+});
+export const getExpService = () => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma.experience_level.findMany();
+    return result;
+});
+export const getTagsService = () => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma.tags.findMany();
+    return result;
+});
+export const getScheduleService = () => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma.working_schedule.findMany();
+    return result;
+});
+export const getEmpTypesService = () => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma.employment_type.findMany();
     return result;
 });
 //# sourceMappingURL=jobService.js.map

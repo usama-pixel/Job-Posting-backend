@@ -29,8 +29,12 @@ export const Login = async (req: Request, res: Response, next: NextFunction) => 
             throw new APIError('Username or password is empty', 404, true, '');
         }
         
-        const d = await loginUser({username, password})
-        const result: ResponseData = {msg: 'Login Successfull', status: 200}
+        const data = await loginUser({username, password})
+        const result: ResponseData = {
+            msg: 'Login Successfull',
+            data: data,
+            status: 200
+        }
         res.json(result)
     } catch(err) {
         next(err)

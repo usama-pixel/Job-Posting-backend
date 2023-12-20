@@ -7,18 +7,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { createJobService, getJobsService, getTotalJobsService } from "../services/jobService.js";
+import { createJobService, getCountriesService, getEmpTypesService, getExpService, getJobsService, getScheduleService, getTagsService, getTotalJobsService } from "../services/jobService.js";
 import { APIError } from "../utils/ApiError.js";
 import HttpStatusCode from "../enums/HttpStatus.js";
 export const createJob = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { position, companyName, tags, hourlyRate, address } = req.body;
-        const fields = [position, companyName, hourlyRate, address];
-        console.log(fields);
+        const { position, companyName, tags, hourlyRate, address, empTypeId, scheduleId, countryId, expId } = req.body;
+        const fields = [position, companyName, hourlyRate, address, empTypeId, scheduleId, countryId, expId];
+        // console.log(tags);
         const isEmpty = fields.some(field => !field || field.length === 0);
         if (isEmpty)
-            throw new APIError('All fields must be filled', HttpStatusCode.NOT_FOUND, true, '');
-        const r = yield createJobService({ position, companyName, tags, hourlyRate, address });
+            throw new APIError('All fields must be filled', HttpStatusCode.BAD_REQUEST, true, '');
+        const r = yield createJobService({ position, companyName, tags, hourlyRate, address, empTypeId, scheduleId, countryId, userId: req.user.id, expId });
         const result = {
             msg: "Job post created",
             status: 200
@@ -31,15 +31,15 @@ export const createJob = (req, res, next) => __awaiter(void 0, void 0, void 0, f
     }
 });
 export const getJobs = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
         const { page } = req.query;
-        const { lower, upper, search, location, schedule, empType } = req.body;
-        console.log({ schedule });
+        const { lower, upper, search, location, experience, schedule, empType } = req.body;
+        const token = (_a = req === null || req === void 0 ? void 0 : req.cookies) === null || _a === void 0 ? void 0 : _a.token;
+        console.log({ token });
         if (!page)
             throw new APIError('Page not specified', HttpStatusCode.BAD_REQUEST, true, '');
-        // if(!lower) throw new APIError('Lower not specified', HttpStatusCode.BAD_REQUEST, true, '');
-        // if(!upper) throw new APIError('Upper not specified', HttpStatusCode.BAD_REQUEST, true, '');
-        const data = yield getJobsService(+page, lower, upper, search, location, schedule, empType);
+        const data = yield getJobsService(+page, lower, upper, search, location, experience, schedule, empType);
         const response = {
             msg: 'Success',
             data: data,
@@ -65,6 +65,82 @@ export const getTotalJobs = (req, res, next) => __awaiter(void 0, void 0, void 0
         res.json(response);
     }
     catch (err) {
+        console.log(err);
+        next(err);
+    }
+});
+export const getCountries = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const countries = yield getCountriesService();
+        const response = {
+            msg: 'Success',
+            status: 200,
+            data: countries
+        };
+        res.json(response);
+    }
+    catch (err) {
+        console.log(err);
+        next(err);
+    }
+});
+export const getExp = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const exp = yield getExpService();
+        const response = {
+            msg: 'Success',
+            status: 200,
+            data: exp
+        };
+        res.json(response);
+    }
+    catch (err) {
+        console.log(err);
+        next(err);
+    }
+});
+export const getTags = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const result = yield getTagsService();
+        const response = {
+            msg: 'Success',
+            status: 200,
+            data: result
+        };
+        res.json(response);
+    }
+    catch (err) {
+        console.log(err);
+        next(err);
+    }
+});
+export const getSchedule = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const result = yield getScheduleService();
+        const response = {
+            msg: 'Success',
+            status: 200,
+            data: result
+        };
+        res.json(response);
+    }
+    catch (err) {
+        console.log(err);
+        next(err);
+    }
+});
+export const getEmpTypes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const result = yield getEmpTypesService();
+        const response = {
+            msg: 'Success',
+            status: 200,
+            data: result
+        };
+        res.json(response);
+    }
+    catch (err) {
+        console.log(err);
         next(err);
     }
 });

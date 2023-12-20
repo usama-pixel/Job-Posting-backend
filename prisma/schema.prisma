@@ -15,6 +15,8 @@ model user {
   username String @unique
   password String
   jobs     jobs[]
+  msgsFrom msgs[] @relation("FromUser")
+  msgsTo   msgs[] @relation("ToUser")
 }
 
 model jobs {
@@ -22,16 +24,25 @@ model jobs {
   date               DateTime
   company_name       String
   position           String
-  tags               String[]
   hourly_rate        Int
-  address            String
   icon               String            @default("default")
+  tags               tags[]
   working_scheduleId Int?
   working_schedule   working_schedule? @relation(fields: [working_scheduleId], references: [id])
   employment_typeId  Int?
   employment_type    employment_type?  @relation(fields: [employment_typeId], references: [id])
   userId             Int?
   user               user?             @relation(fields: [userId], references: [id])
+  experience_levelId Int?
+  experience_level   experience_level? @relation(fields: [experience_levelId], references: [id])
+  countriesId        Int?
+  countries          countries?        @relation(fields: [countriesId], references: [id])
+}
+
+model tags {
+  id   Int    @id @default(autoincrement())
+  name String
+  jobs jobs[]
 }
 
 model working_schedule {
@@ -58,4 +69,25 @@ model employment_type {
   id   Int                @id @default(autoincrement())
   name EmploymentTypeName @default(FULL_DAY)
   jobs jobs[]
+}
+
+model countries {
+  id   Int    @id @default(autoincrement())
+  name String
+  jobs jobs[]
+}
+
+model experience_level {
+  id   Int    @id @default(autoincrement())
+  name String
+  jobs jobs[]
+}
+
+model msgs {
+  id       Int    @id @default(autoincrement())
+  msg      String
+  from     Int
+  toUser   user   @relation(fields: [from], references: [id], name: "FromUser")
+  to       Int
+  fromUser user   @relation(fields: [to], references: [id], name: "ToUser")
 }

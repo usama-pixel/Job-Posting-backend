@@ -11,6 +11,7 @@ import { prisma } from "../db/db.js";
 import HttpStatusCode from "../enums/HttpStatus.js";
 import { APIError } from "../utils/ApiError.js";
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 export const createUser = (data) => __awaiter(void 0, void 0, void 0, function* () {
     const isUserExist = yield prisma.user.findFirst({
         where: {
@@ -31,6 +32,7 @@ export const createUser = (data) => __awaiter(void 0, void 0, void 0, function* 
     return res;
 });
 export const loginUser = ({ username, password }) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const user = yield prisma.user.findFirst({
         where: {
             username,
@@ -40,6 +42,21 @@ export const loginUser = ({ username, password }) => __awaiter(void 0, void 0, v
         throw new APIError('Username does not exists', 404, true, '');
     }
     const hashedPassword = yield bcrypt.compare(password, user.password);
-    console.log({ hashedPassword });
+    const token = jwt.sign({ id: (_a = user.id) === null || _a === void 0 ? void 0 : _a.toString(), name: user.username }, 'SECRET_KEY', {
+        expiresIn: '2 days',
+    });
+    return { token, id: user.id, username: user.username };
+    // return {user: {id: user.id, username: user.username}, token }
+    // const token = jwt.sign(
+    //     {
+    //         id: user.id?.toString(),
+    //         name: user.username
+    //     },
+    //     'secret',
+    //     {
+    //         algorithm: '',
+    //         expires
+    //     }
+    // )
 });
 //# sourceMappingURL=authService.js.map
