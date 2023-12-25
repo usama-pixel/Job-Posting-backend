@@ -10,5 +10,5 @@ jobRoutes.get('/tags', getTags);
 jobRoutes.get('/schedule', getSchedule);
 jobRoutes.get('/employment-types', getEmpTypes);
 jobRoutes.post('/job/apply', applyJob);
-jobRoutes.get('/job', getAppliedJobs);
+jobRoutes.get('/applied-job', getAppliedJobs);
 //# sourceMappingURL=job.js.map
