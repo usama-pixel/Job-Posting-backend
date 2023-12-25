@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { createJobService, getCountriesService, getEmpTypesService, getExpService, getJobsService, getScheduleService, getTagsService, getTotalJobsService } from "../services/jobService.js";
+import { getAppliedJobsService, applyJobService, createJobService, getCountriesService, getEmpTypesService, getExpService, getJobsService, getScheduleService, getTagsService, getTotalJobsService } from "../services/jobService.js";
 import { APIError } from "../utils/ApiError.js";
 import HttpStatusCode from "../enums/HttpStatus.js";
 export const createJob = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -138,6 +138,43 @@ export const getEmpTypes = (req, res, next) => __awaiter(void 0, void 0, void 0,
             data: result
         };
         res.json(response);
+    }
+    catch (err) {
+        console.log(err);
+        next(err);
+    }
+});
+export const applyJob = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { myId, jobId } = req.body;
+        console.log({ myId, jobId });
+        const d = yield applyJobService(+myId, +jobId);
+        const result = {
+            msg: '',
+            status: 200,
+            data: d
+        };
+        res.json('yes');
+    }
+    catch (err) {
+        console.log(err);
+        next(err);
+    }
+});
+export const getAppliedJobs = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log({ 'req': req.query });
+        const { myId } = req.query;
+        if (!myId)
+            throw new APIError('Id must be defined', 400);
+        const d = yield getAppliedJobsService(+myId);
+        console.log({ d });
+        const result = {
+            msg: 'abc',
+            status: 200,
+            data: d
+        };
+        res.json(result);
     }
     catch (err) {
         console.log(err);

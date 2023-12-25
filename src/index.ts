@@ -55,8 +55,8 @@ try {
         })
         socket.on('send_msg', ({msg, to, from}): void => {
             console.log({msg, to, from});
-            saveMsgService(msg, from, to)
-            users[to].emit('recieve_msg', msg)
+            // saveMsgService(msg, from, to)
+            users[to].emit('recieve_msg', {msg, to, from})
             // socket.emit('recieve_msg', msg, id)
         })
         socket.on('test', data => {

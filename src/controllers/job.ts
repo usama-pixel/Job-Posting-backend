@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, response } from "express";
-import { createJobService, getCountriesService, getEmpTypesService, getExpService, getJobsService, getScheduleService, getTagsService, getTotalJobsService  } from "../services/jobService.js";
+import { getAppliedJobsService, applyJobService, createJobService, getCountriesService, getEmpTypesService, getExpService, getJobsService, getScheduleService, getTagsService, getTotalJobsService  } from "../services/jobService.js";
 import {ResponseData} from '../interface/responseData.js'
 import { APIError } from "../utils/ApiError.js";
 import HttpStatusCode from "../enums/HttpStatus.js";
@@ -147,6 +147,42 @@ export const getEmpTypes = async (req: AuthenticatedRequest, res: Response, next
         res.json(response)
     } catch(err) {
         console.log(err);
+        next(err)
+    }
+}
+
+export const applyJob = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    try {
+        const {myId, jobId} = req.body
+        console.log({myId, jobId})
+        const d = await applyJobService(+myId, +jobId)
+        const result: ResponseData = {
+            msg: '',
+            status: 200,
+            data: d
+        }
+        res.json('yes')
+    } catch(err) {
+        console.log(err)
+        next(err)
+    }
+}
+
+export const getAppliedJobs = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    try {
+        console.log({'req': req.query})
+        const {myId} = req.query
+        if(!myId) throw new APIError('Id must be defined', 400)
+        const d = await getAppliedJobsService(+myId);
+        console.log({d})
+        const result: ResponseData = {
+            msg: 'abc',
+            status: 200,
+            data: d
+        }
+        res.json(result)
+    } catch(err) {
+        console.log(err)
         next(err)
     }
 }

@@ -106,4 +106,29 @@ export const getEmpTypesService = () => __awaiter(void 0, void 0, void 0, functi
     const result = yield prisma.employment_type.findMany();
     return result;
 });
+export const applyJobService = (myId, jobId) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma.user_jobs.create({
+        data: {
+            jobId,
+            userId: myId
+        }
+    });
+    return result;
+});
+export const getAppliedJobsService = (myId) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma.user_jobs.findMany({
+        where: {
+            userId: myId
+        },
+        include: {
+            job: {
+                select: {
+                    company_name: true,
+                    position: true
+                }
+            }
+        }
+    });
+    return result;
+});
 //# sourceMappingURL=jobService.js.map

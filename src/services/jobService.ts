@@ -132,3 +132,30 @@ export const getEmpTypesService = async () => {
     const result = await prisma.employment_type.findMany();
     return result;
 }
+
+export const applyJobService = async (myId: number, jobId: number) => {
+    const result = await prisma.user_jobs.create({
+        data: {
+            jobId,
+            userId: myId
+        }
+    })
+    return result;
+}
+
+export const getAppliedJobsService = async (myId: number) => {
+    const result = await prisma.user_jobs.findMany({
+        where: {
+            userId: myId
+        },
+        include: {
+            job: {
+                select: {
+                    company_name: true,
+                    position: true
+                }
+            }
+        }
+    })
+    return result
+}

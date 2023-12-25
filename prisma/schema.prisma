@@ -11,12 +11,13 @@ datasource db {
 }
 
 model user {
-  id       Int    @id @default(autoincrement())
-  username String @unique
-  password String
-  jobs     jobs[]
-  msgsFrom msgs[] @relation("FromUser")
-  msgsTo   msgs[] @relation("ToUser")
+  id           Int         @id @default(autoincrement())
+  username     String      @unique
+  password     String
+  jobs         jobs[]
+  msgsFrom     msgs[]      @relation("FromUser")
+  msgsTo       msgs[]      @relation("ToUser")
+  jobs_applied user_jobs[]
 }
 
 model jobs {
@@ -37,6 +38,16 @@ model jobs {
   experience_level   experience_level? @relation(fields: [experience_levelId], references: [id])
   countriesId        Int?
   countries          countries?        @relation(fields: [countriesId], references: [id])
+  users_applied      user_jobs[]
+}
+
+model user_jobs {
+  userId Int
+  jobId  Int
+  user   user @relation(fields: [userId], references: [id])
+  job    jobs @relation(fields: [jobId], references: [id])
+
+  @@id([userId, jobId])
 }
 
 model tags {

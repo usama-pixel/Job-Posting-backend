@@ -1,2 +1,2 @@
-export const itemsPerPage = 1;
+export const itemsPerPage = 10;
 //# sourceMappingURL=constants.js.map

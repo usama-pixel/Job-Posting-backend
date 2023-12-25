@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {createJob, getCountries, getEmpTypes, getExp, getJobs, getSchedule, getTags, getTotalJobs} from "../controllers/job.js";
+import { createJob, getCountries, getEmpTypes, getExp, getJobs, getSchedule, getTags, getTotalJobs, applyJob, getAppliedJobs } from "../controllers/job.js";
 
 export const jobRoutes = Router()
 
@@ -11,3 +11,5 @@ jobRoutes.get('/exp', getExp)
 jobRoutes.get('/tags', getTags)
 jobRoutes.get('/schedule', getSchedule)
 jobRoutes.get('/employment-types', getEmpTypes)
+jobRoutes.post('/job/apply', applyJob)
+jobRoutes.get('/job', getAppliedJobs)
