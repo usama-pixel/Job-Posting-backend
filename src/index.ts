@@ -18,7 +18,7 @@ const server = http.createServer(app)
 app.use(cors());
 app.use(bodyParser.json())
 app.use(cookieParser())
-const port = 8080;
+const port = process.env.PORT || 8080;
 
 
 app.use(AuthRoutes);
