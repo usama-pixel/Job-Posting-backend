@@ -1,0 +1,1 @@
+web: npx prisma db seed --preview-feature && node dist/index.js
