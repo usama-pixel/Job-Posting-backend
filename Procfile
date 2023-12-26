@@ -1,1 +1,1 @@
-web: npx prisma db seed --preview-feature && node build/index.js
+web: npx prisma db seed && node build/index.js
