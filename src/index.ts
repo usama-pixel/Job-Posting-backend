@@ -1,6 +1,6 @@
 import http from 'http'
 import express, { NextFunction, Request, Response } from 'express';
-import Cors from 'cors'
+import cors from 'cors'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import {AuthRoutes} from './routes/auth.js'
@@ -15,7 +15,7 @@ import { msgsRouter } from './routes/msgs.js';
 
 const app = express();
 const server = http.createServer(app)
-app.use(Cors());
+app.use(cors());
 app.use(bodyParser.json())
 app.use(cookieParser())
 const port = 3001;
