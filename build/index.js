@@ -1,6 +1,6 @@
 import http from 'http';
 import express from 'express';
-import Cors from 'cors';
+import cors from 'cors';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import { AuthRoutes } from './routes/auth.js';
@@ -11,10 +11,11 @@ import { userRouter } from './routes/users.js';
 import { msgsRouter } from './routes/msgs.js';
 const app = express();
 const server = http.createServer(app);
-app.use(Cors());
+app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());
-const port = 3001;
+const port = process.env.PORT || 8080;
+console.log({ port });
 app.use(AuthRoutes);
 // app.use(getUser)
 app.use(jobRoutes);

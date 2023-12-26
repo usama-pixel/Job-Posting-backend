@@ -19,8 +19,7 @@ app.use(cors());
 app.use(bodyParser.json())
 app.use(cookieParser())
 const port = process.env.PORT || 8080;
-
-
+console.log({port});
 app.use(AuthRoutes);
 // app.use(getUser)
 app.use(jobRoutes);
