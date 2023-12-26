@@ -6,6 +6,7 @@ import { GetUsersService } from "../services/usersService.js";
 export const GetUsers = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const id = req.query.id
+        console.log({mid: id})
         if(!id) throw new APIError('Id not specified', 400, true, '')
         // const id2 = req.params.id
 
