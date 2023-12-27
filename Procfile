@@ -1,1 +1,0 @@
-web: npx prisma db seed && node build/index.js
