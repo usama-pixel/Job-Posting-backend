@@ -9,6 +9,7 @@ import { BaseError } from './utils/ApiError.js';
 import { getUser } from './middlewares/getUser.js';
 import { getIO } from './utils/socketio.js';
 import { userRouter } from './routes/users.js';
+import { saveMsgService } from './services/msgService.js';
 import { msgsRouter } from './routes/msgs.js';
 const app = express();
 const server = http.createServer(app);
@@ -44,7 +45,7 @@ try {
         });
         socket.on('send_msg', ({ msg, to, from }) => {
             console.log({ msg, to, from });
-            // saveMsgService(msg, from, to)
+            saveMsgService(msg, from, to);
             users[to].emit('recieve_msg', { msg, to, from });
             // socket.emit('recieve_msg', msg, id)
         });
