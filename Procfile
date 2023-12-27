@@ -1,1 +1,1 @@
-web: npx prisma push && npx prisma db seed
+web: npx prisma db push && npx prisma db seed
