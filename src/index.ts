@@ -19,12 +19,13 @@ app.use(cors());
 app.use(bodyParser.json())
 app.use(cookieParser())
 const port = process.env.PORT || 8080;
-console.log({port});
-app.use(AuthRoutes);
-// app.use(getUser)
+
+
+app.use(getUser)
 app.use(jobRoutes);
 app.use(userRouter)
 app.use(msgsRouter)
+app.use(AuthRoutes);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     let httpCode = 500;
@@ -32,6 +33,8 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
         httpCode = err.httpCode
     } else {
         console.log('not working');
+        console.log(err)
+
     }
     res.status(httpCode)
     res.json({msg: err.name, err})

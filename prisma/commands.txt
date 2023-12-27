@@ -1,3 +1,5 @@
 migrate command
     npx prisma migrate dev --name init
 
+seed command
+    npx prisma db seed

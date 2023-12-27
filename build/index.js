@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import { AuthRoutes } from './routes/auth.js';
 import { jobRoutes } from './routes/job.js';
 import { BaseError } from './utils/ApiError.js';
+import { getUser } from './middlewares/getUser.js';
 import { getIO } from './utils/socketio.js';
 import { userRouter } from './routes/users.js';
 import { msgsRouter } from './routes/msgs.js';
@@ -15,12 +16,11 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());
 const port = process.env.PORT || 8080;
-console.log({ port });
-app.use(AuthRoutes);
-// app.use(getUser)
+app.use(getUser);
 app.use(jobRoutes);
 app.use(userRouter);
 app.use(msgsRouter);
+app.use(AuthRoutes);
 app.use((err, req, res, next) => {
     let httpCode = 500;
     if (err instanceof BaseError) {
@@ -28,6 +28,7 @@ app.use((err, req, res, next) => {
     }
     else {
         console.log('not working');
+        console.log(err);
     }
     res.status(httpCode);
     res.json({ msg: err.name, err });
