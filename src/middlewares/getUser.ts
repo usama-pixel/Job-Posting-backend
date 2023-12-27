@@ -6,7 +6,7 @@ import { AuthenticatedRequest } from "../interface/AuthenticatedRequest.js";
 export const getUser = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const token = req.headers.authorization?.split(' ')[1]
     if(!token) return next()
-    // console.log({token});
+    console.log({token});
     try {
         const decoded: any = jwt.verify(token as string, process.env.SECRET_KEY as string    )
         console.log({abc: decoded?.id});
